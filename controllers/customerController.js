@@ -98,14 +98,14 @@ const cartUpdate = async (req, res) => {
         // getting id from token, and sending the new details
 
         if(customer) {
-            return res.status(200).json({success: true, message: 'Customer cart updated!', updatedCart: customer})
+            return res.status(200).json({success: true, message: 'Customer cart updated!', updatedCart: customer});
             // if customer exists, we update and send the response with proper messaging
         }
 
         res.status(404).json({success: false, message: 'Customer not found.'});
 
     } catch (err) {
-        res.status(500).json({success: false, message: 'Internal Server Error.', err);
+        res.status(500).json({success: false, message: 'Internal Server Error.', err});
     }
 }
 
