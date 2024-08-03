@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const Customer = require('../models/customerSchema.js');
-const { createNewToken } = require('../utils/token.js');
+const createNewToken = require('../utils/token.js');
 
 const customerRegister = async (req, res) => {
     try {
@@ -18,7 +18,7 @@ const customerRegister = async (req, res) => {
             res.send({ message: 'Email already exists' });
         }
         else {
-            let result = await customer.save();
+            let result = await Customer.create(customer);
             result.password = undefined;
             
             const token = createNewToken(result._id)
@@ -38,9 +38,9 @@ const customerRegister = async (req, res) => {
 const customerLogIn = async (req, res) => {
     if (req.body.email && req.body.password) {
         let customer = await Customer.findOne({ email: req.body.email });
-        if (!customer) {
+        if (customer) {
             const validated = await bcrypt.compare(req.body.password, customer.password);
-            if (!validated) {
+            if (validated) {
                 customer.password = undefined;
 
                 const token = createNewToken(customer._id)

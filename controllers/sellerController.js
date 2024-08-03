@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const Seller = require('../models/sellerSchema.js');
-const { createNewToken } = require('../utils/token.js');
+const createNewToken = require('../utils/token.js');
 
 const sellerRegister = async (req, res) => {
     try {
@@ -9,7 +9,7 @@ const sellerRegister = async (req, res) => {
 
         const seller = new Seller({
             ...req.body,
-            password: bcrypt.hash
+            password: hashedPass
         });
 
         const existingSellerByEmail = await Seller.findOne({ email: req.body.email });
@@ -22,14 +22,14 @@ const sellerRegister = async (req, res) => {
             res.send({ message: 'Shop name already exists' });
         }
         else {
-            let result = await seller.save();
+            let result = await Seller.create(seller);
             result.password = undefined;
 
             const token = createNewToken(result._id)
 
             result = {
                 ...result._doc,
-                token: token
+                token
             };
 
             res.send(result);
@@ -51,7 +51,7 @@ const sellerLogIn = async (req, res) => {
 
                 seller = {
                     ...seller._doc,
-                    token: tokens
+                    token
                 };
 
                 res.send(seller);
