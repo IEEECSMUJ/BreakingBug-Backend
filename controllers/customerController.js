@@ -18,7 +18,7 @@ const customerRegister = async (req, res) => {
             res.send({ message: 'Email already exists' });
         }
         else {
-            let result = await customer.save();
+            let result = await Customer.create(customer);
             result.password = undefined;
             
             const token = createNewToken(result._id)
