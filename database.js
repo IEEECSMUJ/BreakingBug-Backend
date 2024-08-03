@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
 
-// MongoDB URL
 const mongoURL = process.env.MONGO_URL;
 
 console.log(`
@@ -10,306 +9,23 @@ IEEE CS MUJ Breaking Bug - Database set up.
 
 Setting up the database. This might take a moment.
 Note: It worked if it ends with "Dummy data created!"
-`)
+`);
 
-// Connect to MongoDB
+//made a function connectToDB to connect to DB and create Dummy Data
+const connectToDB = ()=>{
 mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('MongoDB connected...');
-    createDummyData();  // Call function to create dummy data
+    createDummyData();  
   })
   .catch(err => console.log(err));
+}
+// why to define schemas again we can just import the models
+const { Customer, Order, Product, Seller } = require('./path/to/models');
 
-// Customer Schema
-const customerSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    default: "Customer"
-  },
-  cartDetails: [{
-    productName: {
-      type: String
-    },
-    price: {
-      mrp: {
-        type: Number
-      },
-      cost: {
-        type: Number
-      },
-      discountPercent: {
-        type: Number
-      }
-    },
-    subcategory: {
-      type: String
-    },
-    productImage: {
-      type: String
-    },
-    category: {
-      type: String
-    },
-    description: {
-      type: String
-    },
-    tagline: {
-      type: String
-    },
-    quantity: {
-      type: Number
-    },
-    seller: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'seller'
-    },
-  }],
-  shippingData: {
-    address: {
-      type: String,
-    },
-    city: {
-      type: String,
-    },
-    state: {
-      type: String,
-    },
-    country: {
-      type: String,
-    },
-    pinCode: {
-      type: Number,
-    },
-    phoneNo: {
-      type: Number,
-    },
-  }
-});
-
-const Customer = mongoose.model("customer", customerSchema);
-
-// Order Schema
-const orderSchema = new mongoose.Schema({
-  buyer: {
-    type: mongoose.Schema.ObjectId,
-    ref: "customer",
-    required: true,
-  },
-  shippingData: {
-    address: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    state: {
-      type: String,
-      required: true,
-    },
-    country: {
-      type: String,
-      required: true,
-    },
-    pinCode: {
-      type: Number,
-      required: true,
-    },
-    phoneNo: {
-      type: Number,
-      required: true,
-    },
-  },
-  orderedProducts: [{
-    productName: {
-      type: String
-    },
-    price: {
-      mrp: {
-        type: Number
-      },
-      cost: {
-        type: Number
-      },
-      discountPercent: {
-        type: Number
-      }
-    },
-    subcategory: {
-      type: String
-    },
-    productImage: {
-      type: String
-    },
-    category: {
-      type: String
-    },
-    description: {
-      type: String
-    },
-    tagline: {
-      type: String
-    },
-    quantity: {
-      type: Number
-    },
-    seller: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'seller'
-    },
-  }],
-  paymentInfo: {
-    id: {
-      type: String,
-      required: true,
-    },
-    status: {
-      type: String,
-      required: true,
-    },
-  },
-  paidAt: {
-    type: Date,
-    required: true,
-  },
-  productsQuantity: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  taxPrice: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  shippingPrice: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  totalPrice: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  orderStatus: {
-    type: String,
-    required: true,
-    default: "Processing",
-  },
-  deliveredAt: Date,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-const Order = mongoose.model("order", orderSchema);
-
-// Product Schema
-const productSchema = new mongoose.Schema({
-  productName: {
-    type: String
-  },
-  price: {
-    mrp: {
-      type: Number
-    },
-    cost: {
-      type: Number
-    },
-    discountPercent: {
-      type: Number
-    }
-  },
-  subcategory: {
-    type: String
-  },
-  productImage: {
-    type: String
-  },
-  category: {
-    type: String
-  },
-  description: {
-    type: String
-  },
-  tagline: {
-    type: String
-  },
-  quantity: {
-    type: Number,
-    default: 1
-  },
-  reviews: [{
-    rating: {
-      type: Number,
-    },
-    comment: {
-      type: String,
-    },
-    reviewer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "customer",
-    },
-    date: {
-      type: Date,
-      default: Date.now,
-    },
-  }],
-  seller: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'seller'
-  },
-}, { timestamps: true });
-
-const Product = mongoose.model("product", productSchema);
-
-// Seller Schema
-const sellerSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    default: "Seller"
-  },
-  shopName: {
-    type: String,
-    unique: true,
-    required: true
-  }
-});
-
-const Seller = mongoose.model("seller", sellerSchema);
-
-// Function to create dummy data
+//  i also added more default things to fill in db 
 async function createDummyData() {
-  // Dummy Seller
+
   const seller = new Seller({
     name: "John's Shop",
     email: "john@example.com",
@@ -318,7 +34,7 @@ async function createDummyData() {
   });
   await seller.save();
 
-  // Dummy Customer
+
   const customer = new Customer({
     name: "Jane Doe",
     email: "jane@example.com",
@@ -334,7 +50,7 @@ async function createDummyData() {
   });
   await customer.save();
 
-  // Dummy Product
+
   const product = new Product({
     productName: "Sample Product",
     price: {
@@ -347,11 +63,12 @@ async function createDummyData() {
     category: "Sample Category",
     description: "This is a sample product.",
     tagline: "Best product ever!",
+    quantity: 45, 
     seller: seller._id
   });
   await product.save();
 
-  // Dummy Order
+
   const order = new Order({
     buyer: customer._id,
     shippingData: customer.shippingData,
@@ -381,5 +98,6 @@ async function createDummyData() {
 
   console.log('Dummy data created!');
 }
+// exported the connectToDB function
 
-module.exports = { Customer, Order, Product, Seller };
+module.exports = connectToDB

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const sellerSchema = new mongoose.Schema({
     name: {
@@ -16,13 +16,14 @@ const sellerSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        default: "seller"
+        default: "seller",
     },
     shopName: {
         type: String,
         unique: true,
-        required: true
+        required: true,
     }
 });
 
-moduleexports = mongoose.model("seller", sellerSchema)
+// should be module.exports
+module.exports = mongoose.model("Seller", sellerSchema); // Changed from selle to Seller

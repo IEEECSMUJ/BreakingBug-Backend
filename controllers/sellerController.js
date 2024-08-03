@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const Seller = require('../models/sellerSchema.js');
 const { createNewToken } = require('../utils/token.js');
 
+// maintained api response consistency by changing .send to .json and did proper api response on error
+
 const sellerRegister = async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
@@ -9,33 +11,31 @@ const sellerRegister = async (req, res) => {
 
         const seller = new Seller({
             ...req.body,
-            password: bcrypt.hash
+            password: hashedPass //  Corrected from bcrypt.hash to hashedPass
         });
 
         const existingSellerByEmail = await Seller.findOne({ email: req.body.email });
         const existingShop = await Seller.findOne({ shopName: req.body.shopName });
 
         if (existingSellerByEmail) {
-            res.send({ message: 'Email already exists' });
-        }
-        else if (existingShop) {
-            res.send({ message: 'Shop name already exists' });
-        }
-        else {
+            res.json({ status: 'info', message: 'Email already exists' }); 
+        } else if (existingShop) {
+            res.json({ status: 'info', message: 'Shop name already exists' }); 
+        } else {
             let result = await seller.save();
             result.password = undefined;
 
-            const token = createNewToken(result._id)
+            const token = createNewToken(result._id);
 
             result = {
                 ...result._doc,
                 token: token
             };
 
-            res.send(result);
+            res.json({ status: 'success', data: result }); 
         }
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json({ status: 'error', message: err.message }); 
     }
 };
 
@@ -47,22 +47,22 @@ const sellerLogIn = async (req, res) => {
             if (validated) {
                 seller.password = undefined;
 
-                const token = createNewToken(seller._id)
+                const token = createNewToken(seller._id);
 
                 seller = {
                     ...seller._doc,
-                    token: tokens
+                    token: token //  Corrected from tokens to token
                 };
 
-                res.send(seller);
+                res.json({ status: 'success', data: seller }); 
             } else {
-                res.send({ message: "Invalid password" });
+                res.json({ status: 'info', message: "Invalid password" }); 
             }
         } else {
-            res.send({ message: "User not found" });
+            res.json({ status: 'info', message: "User not found" }); 
         }
     } else {
-        res.send({ message: "Email and password are required" });
+        res.json({ status: 'info', message: "Email and password are required" }); 
     }
 };
 

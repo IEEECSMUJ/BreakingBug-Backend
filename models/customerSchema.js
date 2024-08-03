@@ -1,6 +1,7 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const customerSchema = mongoose.Schema({
+// Should use new before mongoose.Schema
+const customerSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -9,7 +10,6 @@ const customerSchema = mongoose.Schema({
         type: String,
         unique: true,
         required: true,
-
     },
     password: {
         type: String,
@@ -17,44 +17,45 @@ const customerSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        default: "Customer"
+        default: "Customer",
     },
     cartDetails: [{
         productName: {
-            type: String
+            type: String,
         },
         price: {
             mrp: {
-                type: String
+                type: Number, // changed to number 
             },
             cost: {
-                type: Number
+                type: Number,
             },
             discountPercent: {
-                type: Number
-            }
+                type: Number,
+            },
         },
         subcategory: {
-            type: String
+            type: String,
         },
         productImage: {
-            type: String
+            type: String,
         },
         category: {
-            type: String
+            type: String,
         },
         description: {
-            type: String
+            type: String,
         },
         tagline: {
-            type: String
+            type: String,
         },
         quantity: {
-            type: Number
+            type: Number,
         },
+        // Correct the ref value to match the model name exactly
         seller: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'SELLER'
+            ref: 'Seller', // Changed from SELLER to Seller
         },
     }],
     shippingData: {
@@ -67,8 +68,9 @@ const customerSchema = mongoose.Schema({
         state: {
             type: String,
         },
+        // country should be a String if it's a country name or code
         country: {
-            type: Number,
+            type: String, // Changed from Number to String
         },
         pinCode: {
             type: Number,
@@ -79,4 +81,4 @@ const customerSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("customer", customerSchema)
+module.exports = mongoose.model("Customer", customerSchema); // Model name should be Customer
