@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const Seller = require('../models/sellerSchema.js');
-const { createNewToken } = require('../utils/token.js');
+const createNewToken = require('../utils/token.js');
 
 const sellerRegister = async (req, res) => {
     try {
