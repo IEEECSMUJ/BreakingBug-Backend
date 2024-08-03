@@ -9,7 +9,7 @@ const sellerRegister = async (req, res) => {
 
         const seller = new Seller({
             ...req.body,
-            password: bcrypt.hash
+            password: hashedPass
         });
 
         const existingSellerByEmail = await Seller.findOne({ email: req.body.email });
@@ -25,11 +25,11 @@ const sellerRegister = async (req, res) => {
             let result = await seller.save();
             result.password = undefined;
 
-            const token = createNewToken(result._id)
+            const token = createNewToken({ userId: result._id, userRole: result.role })
 
             result = {
                 ...result._doc,
-                token: token
+                token
             };
 
             res.send(result);
@@ -47,11 +47,11 @@ const sellerLogIn = async (req, res) => {
             if (validated) {
                 seller.password = undefined;
 
-                const token = createNewToken(seller._id)
+                const token = createNewToken({ userId: seller._id, userRole: seller.role })
 
                 seller = {
                     ...seller._doc,
-                    token: tokens
+                    token
                 };
 
                 res.send(seller);
