@@ -92,7 +92,7 @@ const getCartDetail = async (req, res) => {
     }
 }
 
-const cartUpdate = async (req, res) => {
+const customerUpdate = async (req, res) => {
     try {
         let customer = await Customer.findByIdAndUpdate(req.userId, req.body, { new: true });
         // getting id from token, and sending the new details
@@ -113,5 +113,5 @@ module.exports = {
     customerRegister,
     customerLogIn,
     getCartDetail,
-    cartUpdate,
+    customerUpdate,
 };
