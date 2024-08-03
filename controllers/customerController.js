@@ -2,8 +2,16 @@ const bcrypt = require('bcrypt');
 const Customer = require('../models/customerSchema.js');
 const { createNewToken } = require('../utils/token.js');
 
+
+
+
 const customerRegister = async (req, res) => {
     try {
+        const existingcustomerByEmail = await Customer.findOne({ email: req.body.email });
+        if (existingcustomerByEmail) {
+            res.send({ message: 'Email already exists' });
+        }
+
         const salt = await bcrypt.genSalt(10);
         const hashedPass = await bcrypt.hash(req.body.password, salt);
 
@@ -12,24 +20,18 @@ const customerRegister = async (req, res) => {
             password: hashedPass
         });
 
-        const existingcustomerByEmail = await Customer.findOne({ email: req.body.email });
+        
+        let result = await customer.save();
+        result.password = undefined;
+        
+        const token = createNewToken(result._id)
 
-        if (existingcustomerByEmail) {
-            res.send({ message: 'Email already exists' });
-        }
-        else {
-            let result = await customer.save();
-            result.password = undefined;
-            
-            const token = createNewToken(result._id)
+        result = {
+            ...result._doc,
+            token: token
+        };
 
-            result = {
-                ...result._doc,
-                token: token
-            };
-
-            res.send(result);
-        }
+        res.status(200).json.send(result);
     } catch (err) {
         res.status(500).json(err);
     }
@@ -38,9 +40,9 @@ const customerRegister = async (req, res) => {
 const customerLogIn = async (req, res) => {
     if (req.body.email && req.body.password) {
         let customer = await Customer.findOne({ email: req.body.email });
-        if (!customer) {
+        if (customer) {
             const validated = await bcrypt.compare(req.body.password, customer.password);
-            if (!validated) {
+            if (validated) {
                 customer.password = undefined;
 
                 const token = createNewToken(customer._id)
@@ -50,7 +52,7 @@ const customerLogIn = async (req, res) => {
                     token: token
                 };
 
-                res.send(customer);
+                res.status(200).send(customer);
             } else {
                 res.send({ message: "Invalid password" });
             }
@@ -64,12 +66,12 @@ const customerLogIn = async (req, res) => {
 
 const getCartDetail = async (req, res) => {
     try {
-        let customer = await Customer.findBy(req.params.id)
+        let customer = await Customer.findById(req.params.id)
         if (customer) {
-            res.get(customer.cartDetails);
+            res.json(customer.cartDetails);
         }
         else {
-            res.send({ message: "No customer found" });
+            res.status(200).send({ message: "No customer found" });
         }
     } catch (err) {
         res.status(500).json(err);
