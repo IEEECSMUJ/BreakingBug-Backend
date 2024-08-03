@@ -12,13 +12,7 @@ Setting up the database. This might take a moment.
 Note: It worked if it ends with "Dummy data created!"
 `)
 
-// Connect to MongoDB
-mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log('MongoDB connected...');
-    createDummyData();  // Call function to create dummy data
-  })
-  .catch(err => console.log(err));
+
 
 // Customer Schema
 const customerSchema = new mongoose.Schema({
@@ -310,7 +304,8 @@ const Seller = mongoose.model("seller", sellerSchema);
 // Function to create dummy data
 async function createDummyData() {
   // Dummy Seller
-  const seller = new Seller({
+ try{
+    const seller = new Seller({
     name: "John's Shop",
     email: "john@example.com",
     password: "password123",
@@ -318,6 +313,7 @@ async function createDummyData() {
   });
   await seller.save();
 
+ }
   // Dummy Customer
   const customer = new Customer({
     name: "Jane Doe",
@@ -381,5 +377,11 @@ async function createDummyData() {
 
   console.log('Dummy data created!');
 }
-
+// Connect to MongoDB
+mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('MongoDB connected...');
+    createDummyData();  // Call function to create dummy data
+  })
+  .catch(err => console.log(err));
 module.exports = { Customer, Order, Product, Seller };
