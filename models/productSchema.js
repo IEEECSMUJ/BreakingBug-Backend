@@ -1,4 +1,4 @@
-const mongoose = require("mongoose", "plugin")
+const mongoose = require("mongoose")
 
 const productSchema =  mongoose.Schema(
     {
