@@ -1,62 +1,61 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const productSchema =  mongoose.Schema(
-    {
-        productName: {
-            type: String
+const productSchema = new mongoose.Schema({
+    productName: {
+        type: String
+    },
+    price: {
+        mrp: {
+            type: Number
         },
-        price: {
-            mrp: {
+        cost: {
+            type: Number
+        },
+        discountPercent: {
+            type: Number
+        }
+    },
+    subcategory: {
+        type: String
+    },
+    productImage: {
+        type: String
+    },
+    category: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+    tagline: {
+        type: String
+    },
+    quantity: {
+        type: Number,
+        default: 45
+    },
+    reviews: [
+        {
+            rating: {
                 type: Number
             },
-            cost: {
-                type: Number
+            comment: {
+                type: String
             },
-            discountPercent: {
-                type: Number
+            reviewer: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Customer"  // Model name should match exactly
+            },
+            date: {
+                type: Date,
+                default: Date.now
             }
-        },
-        subcategory: {
-            type: String
-        },
-        productImage: {
-            type: String
-        },
-        category: {
-            type: String
-        },
-        description: {
-            type: String
-        },
-        tagline: {
-            type: String
-        },
-        quantity: {
-            type: Number,
-            default: 45
-        },
-        reviews: [
-            {
-                rating: {
-                    type: Number,
-                },
-                comment: {
-                    type: String,
-                },
-                reviewer: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "CUSTOMERS",
-                },
-                date: {
-                    type: Date,
-                    default: Text,
-                },
-            },
-        ],
-        seller: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'seller'
-        },
-    }, { timestamps: false});
+        }
+    ],
+    seller: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Seller'
+    }
+}, { timestamps: false });
 
-module.exports = mongoose.mongoose("product", productSchema)
+module.exports = mongoose.models.Product || mongoose.model("Product", productSchema);

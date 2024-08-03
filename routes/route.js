@@ -1,71 +1,43 @@
 const router = require('express').Router();
-const authMiddleware = require('../middleware/authMiddleware.js');
 
-const {
-    sellerRegister,
-    sellerLogIn
-} = require('../controllers/orderController.js');
-
-const {
-    productCreate,
-    getProducts,
-    getProductDetail,
-    searchProductbyCategory,
-    getSellerProducts,
-    updateProduct,
-    deleteProduct,
-    deleteProducts,
-    deleteProductReview,
-    deleteAllProductReviews,
-    addReview,
-    getInterestedCustomers,
-    getAddedToCartProducts,
-} = require('../controllers/productController.js');
-
-const {
-    customerRegister,
-    customerLogIn,
-    getCartDetail,
-    cartUpdate
-} = require('../controllers/customerController.js');
-
-const {
-    newOrder,
-    getOrderedProductsBySeller
-} = require('../controllers/orderController.js');
-
+const sellerController = require('../controllers/sellerController.js'); // Updated import
+const productController = require('../controllers/productController.js');
+const customerController = require('../controllers/customerController.js');
+const orderController = require('../controllers/orderController.js'); // Ensure this is correctly imported
 
 // Seller
-router.post('/SellerRegister', sellerRegister);
-router.post('/SellerLogin', sellerLogIn);
+router.post('/SellerRegister', sellerController.sellerRegister); // Corrected controller
+router.post('/SellerLogin', sellerController.sellerLogIn);      // Corrected controller
 
 // Product
-router.post('/ProductCreate', productCreate);
-router.get('/getSellerProducts/:id', getSellerProducts);
-router.get('/getProducts', getProducts);
-router.get('/getProductDetail/:id', getProductDetail);
-router.get('/getInterestedCustomers/:id', getInterestedCustomers);
-router.get('/getAddedToCartProducts/:id', getAddedToCartProducts);
+router.post('/ProductCreate', productController.productCreate);
+router.get('/getSellerProducts/:id', productController.getSellerProducts);
+router.get('/getProducts', productController.getProducts);
+router.get('/getProductDetail/:id', productController.getProductDetail);
+router.get('/getInterestedCustomers/:id', productController.getInterestedCustomers);
+router.get('/getAddedToCartProducts/:id', productController.getAddedToCartProducts);
 
-router.put('/ProductUpdate/:id', updateProduct);
-router.put('/addReview/:id', addReview);
+router.put('/ProductUpdate/:id', productController.updateProduct);
+router.put('/addReview/:id', productController.addReview);
 
-router.get('/searchProduct/:key', searchProductbyCategory);
-router.get('/searchProductbyCategory/:key', searchProductbyCategory);
-router.get('/searchProductbySubCategory/:key', searchProductbyCategory);
+router.get('/searchProduct/:key', productController.searchProduct);
+router.get('/searchProductbyCategory/:key', productController.searchProductbyCategory);
+router.get('/searchProductbySubCategory/:key', productController.searchProductbySubCategory);
 
-router.delete('/DeleteProduct/:id', deleteProduct);
-router.delete('/DeleteProducts/:id', deleteProducts);
-router.delete ('/deleteProductReview/:id', deleteProductReview);
-router.put ('/deleteAllProductReviews/:id', deleteAllProductReviews);
+router.delete('/DeleteProduct/:id', productController.deleteProduct);
+router.delete('/DeleteProducts/:id', productController.deleteProducts);
+router.delete('/deleteProductReview/:id', productController.deleteProductReview);
+router.put('/deleteAllProductReviews/:id', productController.deleteAllProductReviews);
 
 // Customer
-router.post('/CustomerRegister', customerRegister);
-router.post('/CustomerLogin', customerLogIn);
-router.get('/getCartDetail/:id', getCartDetail);
-router.put('/CustomerUpdate/:id', cartUpdate);
+router.post('/CustomerRegister', customerController.customerRegister);
+router.post('/CustomerLogin', customerController.customerLogIn);
+router.get('/getCartDetail/:id', customerController.getCartDetail);
+router.put('/CustomerUpdate/:id', customerController.cartUpdate);
 
 // Order
-router.post('/newOrder', newOrder);
-router.get('/getOrderedProductsByCustomer/:id', getOrderedProductsBySeller);
-router.get('/getOrderedProductsBySeller/:id', getOrderedProductsBySeller);
+router.post('/newOrder', orderController.newOrder);
+router.get('/getOrderedProductsByCustomer/:id', orderController.getOrderedProductsByCustomer);
+router.get('/getOrderedProductsBySeller/:id', orderController.getOrderedProductsBySeller);
+
+module.exports = router;

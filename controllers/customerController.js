@@ -12,16 +12,15 @@ const customerRegister = async (req, res) => {
             password: hashedPass
         });
 
-        const existingcustomerByEmail = await Customer.findOne({ email: req.body.email });
+        const existingCustomerByEmail = await Customer.findOne({ email: req.body.email });
 
-        if (existingcustomerByEmail) {
+        if (existingCustomerByEmail) {
             res.send({ message: 'Email already exists' });
-        }
-        else {
+        } else {
             let result = await customer.save();
             result.password = undefined;
-            
-            const token = createNewToken(result._id)
+
+            const token = createNewToken(result._id);
 
             result = {
                 ...result._doc,
@@ -38,12 +37,12 @@ const customerRegister = async (req, res) => {
 const customerLogIn = async (req, res) => {
     if (req.body.email && req.body.password) {
         let customer = await Customer.findOne({ email: req.body.email });
-        if (!customer) {
+        if (customer) {
             const validated = await bcrypt.compare(req.body.password, customer.password);
-            if (!validated) {
+            if (validated) {
                 customer.password = undefined;
 
-                const token = createNewToken(customer._id)
+                const token = createNewToken(customer._id);
 
                 customer = {
                     ...customer._doc,
@@ -64,30 +63,25 @@ const customerLogIn = async (req, res) => {
 
 const getCartDetail = async (req, res) => {
     try {
-        let customer = await Customer.findBy(req.params.id)
+        let customer = await Customer.findById(req.params.id);
         if (customer) {
-            res.get(customer.cartDetails);
-        }
-        else {
+            res.send(customer.cartDetails);
+        } else {
             res.send({ message: "No customer found" });
         }
     } catch (err) {
         res.status(500).json(err);
     }
-}
+};
 
 const cartUpdate = async (req, res) => {
     try {
-
-        let customer = await Customer.findByIdAndUpdate(req.params.id, req.body,
-            { new: false })
-
-        return res.send(customer.cartDetails);
-
+        let customer = await Customer.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.send(customer.cartDetails);
     } catch (err) {
         res.status(500).json(err);
     }
-}
+};
 
 module.exports = {
     customerRegister,

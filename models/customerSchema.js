@@ -1,6 +1,6 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const customerSchema = mongoose.Schema({
+const customerSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -9,7 +9,6 @@ const customerSchema = mongoose.Schema({
         type: String,
         unique: true,
         required: true,
-
     },
     password: {
         type: String,
@@ -54,7 +53,7 @@ const customerSchema = mongoose.Schema({
         },
         seller: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'SELLER'
+            ref: 'Seller'  // Model name should be capitalized
         },
     }],
     shippingData: {
@@ -68,7 +67,7 @@ const customerSchema = mongoose.Schema({
             type: String,
         },
         country: {
-            type: Number,
+            type: String,  // Changed to String to match address format
         },
         pinCode: {
             type: Number,
@@ -79,4 +78,4 @@ const customerSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("customer", customerSchema)
+module.exports = mongoose.models.Customer || mongoose.model("Customer", customerSchema);
