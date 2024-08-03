@@ -45,18 +45,24 @@ const productSchema =  mongoose.Schema(
                 },
                 reviewer: {
                     type: mongoose.Schema.Types.ObjectId,
-                    ref: "CUSTOMERS",
+                    // #12 ref: "CUSTOMERS" == > ref: "customer"
+                    ref: "customer",
                 },
                 date: {
                     type: Date,
-                    default: Text,
+                    // #1 changing default "text" to "Date.now()"
+                    default: Date.now(),
                 },
             },
         ],
         seller: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'seller'
+            ref: 'seller',
+            // #15
+            required : true
+
         },
     }, { timestamps: false});
 
-module.exports = mongoose.mongoose("product", productSchema)
+// #2 changing mongoose method from "mongoose" to "model" (mongoose.model() method) 
+module.exports = mongoose.model("product", productSchema)
