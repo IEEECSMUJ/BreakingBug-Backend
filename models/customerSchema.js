@@ -54,7 +54,7 @@ const customerSchema = mongoose.Schema({
         },
         seller: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'SELLER'
+            ref: 'Seller'
         },
     }],
     shippingData: {
