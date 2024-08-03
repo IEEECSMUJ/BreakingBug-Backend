@@ -25,7 +25,7 @@ const sellerRegister = async (req, res) => {
             let result = await Seller.create(seller);
             result.password = undefined;
 
-            const token = createNewToken({ userId: result._id, userRole: result.role })
+            const token = createNewToken(result._id)
 
             result = {
                 ...result._doc,
@@ -47,7 +47,7 @@ const sellerLogIn = async (req, res) => {
             if (validated) {
                 seller.password = undefined;
 
-                const token = createNewToken({ userId: seller._id, userRole: seller.role })
+                const token = createNewToken(seller._id)
 
                 seller = {
                     ...seller._doc,
