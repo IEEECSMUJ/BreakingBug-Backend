@@ -45,38 +45,43 @@ const sellerRegister = async (req, res) => {
             // added proper message and api consistency
         }
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json({success: false, message: 'Internal Server Error.', err});
     }
 };
 
 const sellerLogIn = async (req, res) => {
-    if (req.body.email && req.body.password) {
-        let seller = await Seller.findOne({ email: req.body.email });
-        if (seller) {
-            const validated = await bcrypt.compare(req.body.password, seller.password);
-            if (validated) {
-                seller.password = undefined;
+    try {
+        if (req.body.email && req.body.password) {
+            let seller = await Seller.findOne({ email: req.body.email });
+            if (seller) {
+                const validated = await bcrypt.compare(req.body.password, seller.password);
+                if (validated) {
+                    seller.password = undefined;
 
-                const token = createNewToken(seller._id)
+                    const token = createNewToken(seller._id)
 
-                seller = {
-                    ...seller._doc,
-                    token
-                };
+                    seller = {
+                        ...seller._doc,
+                        token
+                        // tokens->token
+                    };
 
-                res.status(200).json({success: true, message: 'Seller LogIn successful!'})
-                // added proper message and api consistency
+                    res.status(200).json({success: true, message: 'Seller LogIn successful!'})
+                    // added proper message and api consistency
+                } else {
+                    res.status(401).json({success: false, message: 'Invalid email or password!'});
+                    // added proper message and api consistency
+                }
             } else {
-                res.status(401).json({success: false, message: 'Invalid email or password!'});
+                res.status(404).json({success: false, message: 'Seller account not found. Please signup.'})
                 // added proper message and api consistency
             }
         } else {
-            res.status(404).json({success: false, message: 'Seller account not found. Please signup.'})
+            res.status(401).json({success: false, message: 'Email and Password are required for login!'});
             // added proper message and api consistency
         }
-    } else {
-        res.status(401).json({success: false, message: 'Email and Password are required for login!'});
-        // added proper message and api consistency
+    } catch (err) {
+        res.status(500).json({success: false, message: 'Internal Server Error.', err});
     }
 };
 
