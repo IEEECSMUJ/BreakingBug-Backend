@@ -5,7 +5,7 @@ const productCreate = async (req, res) => {
     try {
         const product = new Product(req.body)
 
-        let result = await product.save();
+        let result = await Product.create(product);
 
         res.send(result);
     } catch (err) {

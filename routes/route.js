@@ -66,8 +66,8 @@ router.get('/getCartDetail', authMiddleware, getCartDetail); // we already have 
 router.put('/CustomerUpdate', authMiddleware, customerUpdate); // we already have the userId through the jwt tokens
 
 // Order
-router.post('/newOrder', newOrder);
-router.get('/getOrderedProductsByCustomer/:id', getOrderedProductsBySeller);
-router.get('/getOrderedProductsBySeller/:id', getOrderedProductsBySeller);
+router.post('/newOrder', authMiddleware, newOrder);
+router.get('/getOrderedProductsByCustomer/:id', authMiddleware, getOrderedProductsBySeller);
+router.get('/getOrderedProductsBySeller/:id', authMiddleware, getOrderedProductsBySeller);
 
 module.exports = router;
