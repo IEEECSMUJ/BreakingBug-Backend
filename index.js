@@ -6,8 +6,11 @@ const dotenv = require("dotenv")
 const app = express()
 const Routes = require("./routes/route.js")
 
+
+=======
 dotenv.config();
 const PORT = process.env.PORT || 5000
+
 
 app.use(express.json({ limit: '10mb' }))
 app.use(cors())

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const productSchema =  mongoose.Schema(
+const productSchema = new mongoose.Schema(
     {
         productName: {
             type: String
@@ -45,11 +45,12 @@ const productSchema =  mongoose.Schema(
                 },
                 reviewer: {
                     type: mongoose.Schema.Types.ObjectId,
-                    ref: "CUSTOMERS",
+                    ref: "Customers",
                 },
                 date: {
                     type: Date,
-                    default: Date.now,
+                    default: Date.now()
+
                 },
             },
         ],
