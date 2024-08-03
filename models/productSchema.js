@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose", "plugin")
 
 const productSchema =  mongoose.Schema(
     {
@@ -49,7 +49,7 @@ const productSchema =  mongoose.Schema(
                 },
                 date: {
                     type: Date,
-                    default: Text,
+                    default: Date,
                 },
             },
         ],
@@ -59,4 +59,4 @@ const productSchema =  mongoose.Schema(
         },
     }, { timestamps: false});
 
-module.exports = mongoose.mongoose("product", productSchema)
+module.exports = mongoose.Mongoose("product", productSchema)
