@@ -15,7 +15,7 @@ const productCreate = async (req, res) => {
 
 const getProducts = async (req, res) => {
     try {
-        let products = await Product.find().populate("seller", "shopName");
+        let products = await Product.find();
         if (products.length > 0) {
             res.send(products);
         } else {
@@ -28,7 +28,7 @@ const getProducts = async (req, res) => {
 
 const getSellerProducts = async (req, res) => {
     try {
-        let products = await Product.find({ seller: req.params.id })
+        const products = await Product.find({ seller: req.params.id })
         if (products.length > 0) {
             res.send(products)
         } else {

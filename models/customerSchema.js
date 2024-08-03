@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const customerSchema = mongoose.Schema({
+const customerSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -68,7 +68,7 @@ const customerSchema = mongoose.Schema({
             type: String,
         },
         country: {
-            type: Number,
+            type: String,
         },
         pinCode: {
             type: Number,
@@ -79,4 +79,4 @@ const customerSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("customer", customerSchema)
+module.exports = mongoose.model("Customer", customerSchema)
