@@ -15,7 +15,7 @@ const productCreate = async (req, res) => {
 
 const getProducts = async (req, res) => {
     try {
-        let products = await Product.find();
+        let products = await Product.find().populate("seller", "shopName");
         if (products.length > 0) {
             res.send(products);
         } else {
@@ -41,16 +41,17 @@ const getSellerProducts = async (req, res) => {
 
 const getProductDetail = async (req, res) => {
     try {
-        let product = await Product.findById(req.params.id)
-            .populate("seller", "shopName")
-            .populate({
-                path: "reviews.reviewer",
-                model: "customer",
-                select: "name"
-            });
+        const product = await Product.findById(req.params.id)
+        console.log(`Fetching product with ID: ${product}`); // Debug output
+            // .populate("seller", "shopName")
+            // .populate({
+            //     path: "reviews.reviewer",
+            //     model: "Customer",
+            //     select: "name"
+            // });
 
         if (product) {
-            res.send(product);
+            res.status(200).json(product);
         }
         else {
             res.send({ message: "No product found" });

@@ -45,7 +45,7 @@ const productSchema = new mongoose.Schema(
                 },
                 reviewer: {
                     type: mongoose.Schema.Types.ObjectId,
-                    ref: "Customers",
+                    ref: "Customer",
                 },
                 date: {
                     type: Date,
@@ -56,7 +56,7 @@ const productSchema = new mongoose.Schema(
         ],
         seller: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'seller'
+            ref: 'Seller'
         },
     }, { timestamps: false});
 
