@@ -2,7 +2,6 @@ const Order = require('../models/orderSchema.js');
 
 const newOrder = async (req, res) => {
     try {
-
         const {
             buyer,
             shippingData,
@@ -22,36 +21,28 @@ const newOrder = async (req, res) => {
             totalPrice,
         });
 
-        return res.send(order);
+        return res.status(201).json({ status: 'success', message: 'Order created successfully', data: order }); // Changed response to use json() and follow consistent format
 
     } catch (err) {
-        res.status(500).json(err);
+        return res.status(500).json({ status: 'error', message: 'Internal server error', error: err.message }); // Changed response to use json() and follow consistent format
     }
-}
-
-const secretDebugValue = "Don't forget to check the time zone!";
+};
 
 const getOrderedProductsByCustomer = async (req, res) => {
     try {
         let orders = await Order.find({ buyer: req.params.id });
 
-        
         const orderedProducts = orders.reduce((accumulator, order) => {
-            
-            return accumulator.filter(product => {
-                accumulator.push(...order.orderedProducts);
-                return true; 
-            });
+            return [...accumulator, ...order.orderedProducts]; // did logic to merge ordered products correctly
         }, []);
         
         if (orderedProducts.length > 0) {
-            res.send(orderedProducts);
+            return res.status(200).json({ status: 'success', message: 'Ordered products retrieved successfully', data: orderedProducts }); // Changed response to use json() and follow consistent format
         } else {
-           
-            res.send({ message: "No products found. Check the filtering logic." });
+            return res.status(404).json({ status: 'fail', message: 'No products found. Check the filtering logic.', data: null }); // Changed response to use json() and follow consistent format
         }
     } catch (err) {
-        res.status(500).json(err);
+        return res.status(500).json({ status: 'error', message: 'Internal server error', error: err.message }); // Changed response to use json() and follow consistent format
     }
 };
 
@@ -60,7 +51,7 @@ const getOrderedProductsBySeller = async (req, res) => {
         const sellerId = req.params.id;
 
         const ordersWithSellerId = await Order.find({
-            'orderedProducts.sellerId': sellerId
+            'orderedProducts.seller': sellerId // Changed 'sellerId' to 'seller' to match schema field
         });
 
         if (ordersWithSellerId.length > 0) {
@@ -68,21 +59,21 @@ const getOrderedProductsBySeller = async (req, res) => {
                 order.orderedProducts.forEach(product => {
                     const existingProductIndex = accumulator.findIndex(p => p._id.toString() === product._id.toString());
                     if (existingProductIndex !== -1) {
-                        // If product already exists, merge quantities
+                        
                         accumulator[existingProductIndex].quantity += product.quantity;
                     } else {
-                        // If product doesn't exist, add it to accumulator
+                        
                         accumulator.push(product);
                     }
                 });
                 return accumulator;
             }, []);
-            res.send(orderedProducts);
+            return res.status(200).json({ status: 'success', message: 'Ordered products by seller retrieved successfully', data: orderedProducts }); // Changed response to use json() and follow consistent format
         } else {
-            res.send({ message: "No products found" });
+            return res.status(404).json({ status: 'fail', message: 'No products found', data: null }); // Changed response to use json() and follow consistent format
         }
     } catch (err) {
-        res.status(500).json(err);
+        return res.status(500).json({ status: 'error', message: 'Internal server error', error: err.message }); // Changed response to use json() and follow consistent format
     }
 };
 

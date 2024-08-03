@@ -1,62 +1,67 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const productSchema =  mongoose.Schema(
-    {
-        productName: {
-            type: String
-        },
-        price: {
-            mrp: {
-                type: Number
-            },
-            cost: {
-                type: Number
-            },
-            discountPercent: {
-                type: Number
-            }
-        },
-        subcategory: {
-            type: String
-        },
-        productImage: {
-            type: String
-        },
-        category: {
-            type: String
-        },
-        description: {
-            type: String
-        },
-        tagline: {
-            type: String
-        },
-        quantity: {
+// added new before mongoose.Schema
+const productSchema = new mongoose.Schema({
+    productName: {
+        type: String,
+        required: true, // Added required attribute for consistency
+    },
+    price: {
+        mrp: {
             type: Number,
-            default: 45
+            required: true, // Added required attribute for consistency
         },
-        reviews: [
-            {
-                rating: {
-                    type: Number,
-                },
-                comment: {
-                    type: String,
-                },
-                reviewer: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "CUSTOMERS",
-                },
-                date: {
-                    type: Date,
-                    default: Text,
-                },
+        cost: {
+            type: Number,
+            required: true, // Added required attribute for consistency
+        },
+        discountPercent: {
+            type: Number,
+            default: 0, // Added default value for consistency
+        }
+    },
+    subcategory: {
+        type: String,
+    },
+    productImage: {
+        type: String,
+    },
+    category: {
+        type: String,
+    },
+    description: {
+        type: String,
+    },
+    tagline: {
+        type: String,
+    },
+    quantity: {
+        type: Number,
+        default: 45, 
+    },
+    reviews: [
+        {
+            rating: {
+                type: Number,
             },
-        ],
-        seller: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'seller'
+            comment: {
+                type: String,
+            },
+            reviewer: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Customer", // Changed to 'Customer' 
+            },
+            date: {
+                type: Date,
+                default: Date.now, // Changed to Date.now 
+            },
         },
-    }, { timestamps: false});
+    ],
+    seller: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Seller', // Capitalized 'Seller' 
+    },
+}, { timestamps: true }); // Changed the timestamps to true
 
-module.exports = mongoose.mongoose("product", productSchema)
+
+module.exports = mongoose.model("Product", productSchema); // Changed to 'Product'

@@ -1,26 +1,31 @@
 const router = require('express').Router();
 const authMiddleware = require('../middleware/authMiddleware.js');
+// i added middleware where ever i found authentication must be there
+// updated the endpoints because as per good practices the routes should be in small letter and i added more meaningfull endpoints
 
+// /:key should be changed to /:id for consistency but for now i am leaving it as it is
 const {
     sellerRegister,
     sellerLogIn
-} = require('../controllers/orderController.js');
+} = require('../controllers/sellerController.js'); // changed to sellerController
 
 const {
     productCreate,
     getProducts,
-    getProductDetail,
-    searchProductbyCategory,
     getSellerProducts,
+    getProductDetail,
     updateProduct,
+    addReview,
+    searchProduct,
+    searchProductbyCategory,
+    searchProductbySubCategory,
     deleteProduct,
     deleteProducts,
     deleteProductReview,
     deleteAllProductReviews,
-    addReview,
     getInterestedCustomers,
     getAddedToCartProducts,
-} = require('../controllers/productController.js');
+} = require('../controllers/productController.js'); // added searchProduct and searchProductbySubCategory
 
 const {
     customerRegister,
@@ -31,41 +36,42 @@ const {
 
 const {
     newOrder,
+    getOrderedProductsByCustomer,
     getOrderedProductsBySeller
-} = require('../controllers/orderController.js');
+} = require('../controllers/orderController.js'); // added getOrderedproductbyCustomer
 
 
-// Seller
-router.post('/SellerRegister', sellerRegister);
-router.post('/SellerLogin', sellerLogIn);
+router.post('/sellers/register', sellerRegister); 
+router.post('/sellers/login', sellerLogIn); 
 
-// Product
-router.post('/ProductCreate', productCreate);
-router.get('/getSellerProducts/:id', getSellerProducts);
-router.get('/getProducts', getProducts);
-router.get('/getProductDetail/:id', getProductDetail);
-router.get('/getInterestedCustomers/:id', getInterestedCustomers);
-router.get('/getAddedToCartProducts/:id', getAddedToCartProducts);
 
-router.put('/ProductUpdate/:id', updateProduct);
-router.put('/addReview/:id', addReview);
+router.post('/products', authMiddleware, productCreate); 
+router.get('/products/seller/:id', authMiddleware, getSellerProducts); 
+router.get('/products', getProducts); 
+router.get('/products/:id', getProductDetail); 
+router.get('/products/interested-customers/:id', authMiddleware, getInterestedCustomers); 
+router.get('/products/added-to-cart/:id', authMiddleware, getAddedToCartProducts); 
 
-router.get('/searchProduct/:key', searchProductbyCategory);
-router.get('/searchProductbyCategory/:key', searchProductbyCategory);
-router.get('/searchProductbySubCategory/:key', searchProductbyCategory);
+router.put('/products/:id', authMiddleware, updateProduct); 
+router.put('/products/reviews/:id', authMiddleware, addReview); 
 
-router.delete('/DeleteProduct/:id', deleteProduct);
-router.delete('/DeleteProducts/:id', deleteProducts);
-router.delete ('/deleteProductReview/:id', deleteProductReview);
-router.put ('/deleteAllProductReviews/:id', deleteAllProductReviews);
+router.get('/products/search/:key', searchProduct); 
+router.get('/products/search/category/:key', searchProductbyCategory); 
+router.get('/products/search/subcategory/:key', searchProductbySubCategory); 
+router.delete('/products/:id', authMiddleware, deleteProduct); 
+router.delete('/products/seller/:id', authMiddleware, deleteProducts); 
+router.delete('/products/reviews/:id', authMiddleware, deleteProductReview); 
+router.delete('/products/reviews/all/:id', authMiddleware, deleteAllProductReviews); 
 
-// Customer
-router.post('/CustomerRegister', customerRegister);
-router.post('/CustomerLogin', customerLogIn);
-router.get('/getCartDetail/:id', getCartDetail);
-router.put('/CustomerUpdate/:id', cartUpdate);
 
-// Order
-router.post('/newOrder', newOrder);
-router.get('/getOrderedProductsByCustomer/:id', getOrderedProductsBySeller);
-router.get('/getOrderedProductsBySeller/:id', getOrderedProductsBySeller);
+router.post('/customers/register', customerRegister); 
+router.post('/customers/login', customerLogIn); 
+router.get('/customers/cart/:id', authMiddleware, getCartDetail); 
+router.put('/customers/cart/:id', authMiddleware, cartUpdate); 
+
+
+router.post('/orders', authMiddleware, newOrder); 
+router.get('/orders/customer/:id', authMiddleware, getOrderedProductsByCustomer); 
+router.get('/orders/seller/:id', authMiddleware, getOrderedProductsBySeller); 
+
+module.exports = router;
