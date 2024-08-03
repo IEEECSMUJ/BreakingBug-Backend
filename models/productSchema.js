@@ -49,11 +49,7 @@ const productSchema =  mongoose.Schema(
                 },
                 date: {
                     type: Date,
-<<<<<<< HEAD
-                    default: Date.now(),
-=======
                     default: Date.now,
->>>>>>> 2b7ddec0fdeaf5b3c5832516ee1d8fae3edd2787
                 },
             },
         ],
