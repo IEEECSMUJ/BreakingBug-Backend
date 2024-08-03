@@ -4,7 +4,7 @@ const authMiddleware = require('../middleware/authMiddleware.js');
 const {
     sellerRegister,
     sellerLogIn
-} = require('../controllers/orderController.js');
+} = require('../controllers/sellerController.js');
 
 const {
     productCreate,
