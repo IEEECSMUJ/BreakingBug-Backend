@@ -22,7 +22,7 @@ const sellerRegister = async (req, res) => {
             res.send({ message: 'Shop name already exists' });
         }
         else {
-            let result = await seller.save();
+            let result = await Seller.create(seller);
             result.password = undefined;
 
             const token = createNewToken({ userId: result._id, userRole: result.role })
