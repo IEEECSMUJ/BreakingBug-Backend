@@ -238,3 +238,7 @@ To set up the database schema, follow these steps:
 <br>
 <img src="https://images.prismic.io/ieeemuj/Zqu58B5LeNNTxuyF_cs-logo.png?auto=format,compress" alt="IEEE CS MUJ Logo">
 <br>
+
+
+
+Google Sheet: https://docs.google.com/spreadsheets/d/1Yngwstkeb8a3PK_3yxw_tf7FwizE5HyiCU8LfL77UYY/edit?usp=sharing
