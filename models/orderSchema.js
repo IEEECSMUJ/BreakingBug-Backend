@@ -4,7 +4,7 @@ const orderSchema = new mongoose.Schema(
     {
         buyer: {
             type: mongoose.Schema.ObjectId,
-            ref: "customer",
+            ref: "Customer",
             required: true,
         },
         shippingData: {
