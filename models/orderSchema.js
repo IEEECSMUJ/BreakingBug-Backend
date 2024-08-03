@@ -117,4 +117,4 @@ const orderSchema = new mongoose.Schema(
         },
     });
 
-module.exports = mongoose.model("customer", orderSchema);
+module.exports = mongoose.model("order", orderSchema);
