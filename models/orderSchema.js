@@ -117,4 +117,5 @@ const orderSchema = new mongoose.Schema(
         },
     });
 
-module.exports = mongoose.model("customer", orderSchema);
+// #3 changing <Collectionname> from "customer" to "order" (cause there is customer collection is already created to it can't be overwritten )
+module.exports = mongoose.model("order", orderSchema);

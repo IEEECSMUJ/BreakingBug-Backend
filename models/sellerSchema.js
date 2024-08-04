@@ -25,4 +25,6 @@ const sellerSchema = new mongoose.Schema({
     }
 });
 
-moduleexports = mongoose.model("seller", sellerSchema)
+// #7 moduleexports ==> module.exports (changed)
+
+module.exports = mongoose.model("seller", sellerSchema)

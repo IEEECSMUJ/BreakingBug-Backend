@@ -28,7 +28,9 @@ const getProducts = async (req, res) => {
 
 const getSellerProducts = async (req, res) => {
     try {
-        let products = await Product.find({ seller: req.params.id })
+        // #6 key should be "_id" not "seller"
+        let products = await Product.find({ _id: req.params.id })
+        console.log(products)   ;
         if (products.length > 0) {
             res.send(products)
         } else {

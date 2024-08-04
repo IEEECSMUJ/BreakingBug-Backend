@@ -1,10 +1,15 @@
 const router = require('express').Router();
 const authMiddleware = require('../middleware/authMiddleware.js');
 
+// #4 changed (../controllers/orderController.js) to (../controllers/sellerController.js)
+
+//sellerRegisterand sellerLogin should import from "sellerController.js" not from "orderController.js"
+
+
 const {
     sellerRegister,
     sellerLogIn
-} = require('../controllers/orderController.js');
+} = require('../controllers/sellerController.js');
 
 const {
     productCreate,
@@ -40,7 +45,7 @@ router.post('/SellerRegister', sellerRegister);
 router.post('/SellerLogin', sellerLogIn);
 
 // Product
-router.post('/ProductCreate', productCreate);
+router.post('/ProductCreate', authMiddleware , productCreate);
 router.get('/getSellerProducts/:id', getSellerProducts);
 router.get('/getProducts', getProducts);
 router.get('/getProductDetail/:id', getProductDetail);
@@ -69,3 +74,6 @@ router.put('/CustomerUpdate/:id', cartUpdate);
 router.post('/newOrder', newOrder);
 router.get('/getOrderedProductsByCustomer/:id', getOrderedProductsBySeller);
 router.get('/getOrderedProductsBySeller/:id', getOrderedProductsBySeller);
+
+// #5 router was not exported
+module.exports = router;
